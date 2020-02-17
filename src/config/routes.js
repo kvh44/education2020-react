@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Main from '../components/layouts/Main';
 import Blank from '../components/layouts/Blank';
 

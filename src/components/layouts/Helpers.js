@@ -4,13 +4,13 @@ export function correctHeight() {
 
     var pageWrapper = $('#page-wrapper');
     var navbarHeight = $('nav.navbar-default').height();
-    var wrapperHeigh = pageWrapper.height();
+    var wrapperHeight = pageWrapper.height();
 
-    if (navbarHeight > wrapperHeigh) {
+    if (navbarHeight > navbarHeight) {
         pageWrapper.css("min-height", navbarHeight + "px");
     }
 
-    if (navbarHeight <= wrapperHeigh) {
+    if (navbarHeight <= navbarHeight) {
         if (navbarHeight < $(window).height()) {
             pageWrapper.css("min-height", $(window).height() + "px");
         } else {
@@ -19,7 +19,7 @@ export function correctHeight() {
     }
 
     if ($('body').hasClass('fixed-nav')) {
-        if (navbarHeight > wrapperHeigh) {
+        if (navbarHeight > navbarHeight) {
             pageWrapper.css("min-height", navbarHeight + "px");
         } else {
             pageWrapper.css("min-height", $(window).height() - 60 + "px");
