@@ -8,7 +8,7 @@ class Footer extends React.Component {
                     10GB of <strong>250GB</strong> Free.
                 </div>
                 <div>
-                    <strong>Copyright</strong> Example Company &copy; 2015-2017
+                    <strong>Copyright</strong> Example Company &copy; 2015-2020
                 </div>
             </div>
         )
