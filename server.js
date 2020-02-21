@@ -12,5 +12,5 @@ new WebpackDevServer(webpack(config), {
         if (error) {
             return console.log(error);
         }
-        console.log('Server running at http://localhost:8000/');
+        console.log('Server running at http://localhost:3000/');
     });

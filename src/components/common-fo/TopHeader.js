@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { smoothlyMenu } from '../layouts/Helpers';
+import { smoothlyMenu } from '../layouts-fo/Helpers';
 import $ from 'jquery';
 
 class TopHeader extends React.Component {

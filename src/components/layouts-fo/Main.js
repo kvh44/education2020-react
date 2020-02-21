@@ -1,8 +1,8 @@
 import React from 'react';
-import Progress from '../common/Progress';
-import Navigation from '../common/Navigation';
-import Footer from '../common/Footer';
-import TopHeader from '../common/TopHeader';
+import Progress from '../common-fo/Progress';
+import Navigation from '../common-fo/Navigation';
+import Footer from '../common-fo/Footer';
+import TopHeader from '../common-fo/TopHeader';
 import { correctHeight, detectBody } from './Helpers';
 import $ from 'jquery';
 

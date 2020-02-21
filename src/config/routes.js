@@ -1,6 +1,6 @@
 import React from 'react';
-import Main from '../components/layouts/Main';
-import Blank from '../components/layouts/Blank';
+import Main from '../components/layouts-fo/Main';
+import Blank from '../components/layouts-fo/Blank';
 
 import MainView from '../views/Main';
 import MinorView from '../views/Minor';
