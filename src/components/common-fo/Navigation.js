@@ -42,6 +42,9 @@ class Navigation extends Component {
                         <li className={this.activeRoute("/minor")}>
                             <Link to="/minor"><i className="fa fa-th-large"></i> <span className="nav-label">Minor view</span></Link>
                         </li>
+                        <li className={this.activeRoute("/liste-ecole-primaire")}>
+                            <Link to="/liste-ecole-primaire"><i className="fa fa-th-large"></i> <span className="nav-label">Ecoles primaires</span></Link>
+                        </li>
                     </ul>
 
             </nav>
