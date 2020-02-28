@@ -1,14 +1,34 @@
 import React from 'react';
+import validate from '../../common/validation/validate';
 
 class SchoolForm extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            schoolName: "",
-            address: "",
-            zipCode: "",
-            description: ""
+            formIsValid: false,
+            formControls: {
+                schoolName:  {
+                    value: '',
+                    valid: false,
+                    touched: false,
+                    validationRules: {
+                       minLength: 3
+                    }
+                },
+                address: {
+                     value: '',
+                     validationRules: {
+                        minLength: 3
+                     }
+                 },
+                zipCode: {
+                     value: ''
+                 },
+                description: {
+                     value: ''
+                 }
+            }
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -20,18 +40,35 @@ class SchoolForm extends React.Component {
           const value = target.type === 'checkbox' ? target.checked : target.value;
           const name = target.name;
 
-          this.setState({
-            [name]: value
-          });
+            const updatedControls = {
+            	...this.state.formControls
+                };
+            const updatedFormElement = {
+            ...updatedControls[name]
+            };
+            updatedFormElement.value = value;
+            updatedFormElement.touched = true;
+            updatedFormElement.valid = validate(value, updatedFormElement.validationRules);
+
+            updatedControls[name] = updatedFormElement;
+
+            let formIsValid = true;
+            for (let inputIdentifier in updatedControls) {
+                if(typeof updatedControls[inputIdentifier] != 'undefined') {
+                    formIsValid = updatedControls[inputIdentifier].valid && formIsValid;
+                }
+            }
+
+            this.setState({
+                formControls: updatedControls,
+                formIsValid: formIsValid
+            });
         }
 
 
     saveSchoolForm(e) {
         e.preventDefault();
-        console.log(this.state.schoolName);
-        console.log(this.state.address);
-        console.log(this.state.zipCode);
-        console.log(this.state.description);
+        console.log(this.state.formControls.schoolName.value);
     }
 
 
@@ -47,24 +84,27 @@ class SchoolForm extends React.Component {
                             </div>
                             <div className="ibox-content">
                                 <form>
-                                    <div className="form-group  row"><label className="col-sm-2 col-form-label">Nom école</label>
+                                    <div className={this.state.formControls.schoolName.touched && !this.state.formControls.schoolName.valid ?  "form-group row has-error" : "form-group row" }>
+                                        <label className="col-sm-2 col-form-label">Nom école</label>
                                         <div className="col-sm-10">
-                                        <input type="text" className="form-control" name="schoolName" value={this.state.schoolName}
-                                         onChange={this.handleInputChange} />
+                                        <input type="text" className= 'form-control' name="schoolName"
+                                        value={this.state.formControls.schoolName.value}
+                                         onChange={this.handleInputChange}
+                                         />
                                         </div>
                                     </div>
                                     <div className="hr-line-dashed"></div>
 
                                     <div className="form-group  row"><label className="col-sm-2 col-form-label">Adresse</label>
                                         <div className="col-sm-10"><input type="text" className="form-control" name="address"
-                                        value={this.state.address}
+                                        value={this.state.formControls.address.value}
                                          onChange={this.handleInputChange} /></div>
                                     </div>
                                     <div className="hr-line-dashed"></div>
 
                                     <div className="form-group  row"><label className="col-sm-2 col-form-label">Code postale</label>
                                         <div className="col-sm-10"><input type="text" className="form-control" name="zipCode"
-                                         value={this.state.zipCode}
+                                         value={this.state.formControls.zipCode.value}
                                          onChange={this.handleInputChange} /></div>
                                     </div>
                                     <div className="hr-line-dashed"></div>
@@ -72,7 +112,11 @@ class SchoolForm extends React.Component {
                                     <div className="form-group  row"><label className="col-sm-2 col-form-label">Description</label>
                                         <div className="col-sm-10">
                                             <textarea className="form-control" id="description" rows="3" placeholder="Enter a description ..."
-                                            name="description" onChange={this.handleInputChange} >{this.state.zipCode}</textarea>
+                                            name="description" onChange={this.handleInputChange}
+                                            value={this.state.formControls.description.value}
+                                            >
+
+                                            </textarea>
                                         </div>
                                     </div>
                                     <div className="hr-line-dashed"></div>
@@ -82,7 +126,7 @@ class SchoolForm extends React.Component {
                                             <div className="float-right">
                                                 <div className="float-e-margins">
                                                     <button  className="btn btn-lg btn-white" type="button">Cancel</button>
-                                                    <button className="btn btn-lg btn-primary" type="button" onClick={this.saveSchoolForm}>Save</button>
+                                                    <button className="btn btn-lg btn-primary" type="button" disabled={!this.state.formIsValid} onClick={this.saveSchoolForm}>Save</button>
                                                 </div>
                                             </div>
                                         </div>
