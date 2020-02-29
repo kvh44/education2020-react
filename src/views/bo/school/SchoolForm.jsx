@@ -7,6 +7,8 @@ class SchoolForm extends React.Component {
         super(props);
         this.state = {
             formIsValid: false,
+            optionsRegion: [
+            ],
             formControls: {
                 schoolName:  {
                     value: '',
@@ -27,7 +29,13 @@ class SchoolForm extends React.Component {
                  },
                 description: {
                      value: ''
-                 }
+                },
+                selectedRegion: {
+                     value: '',
+                     validationRules: {
+                        minLength: 1
+                     }
+                }
             }
         };
 
@@ -35,16 +43,32 @@ class SchoolForm extends React.Component {
         this.saveSchoolForm = this.saveSchoolForm.bind(this);
       }
 
+      async componentDidMount() {
+          //Have a try and catch block for catching errors.
+          try {
+              //Assign the promise unresolved first then get the data using the json method.
+              const regionApiCall = await fetch('http://localhost:7777/api/v1/region/list');
+              const optionsRegion = await regionApiCall.json();
+
+                this.setState({
+                     optionsRegion: optionsRegion
+                });
+          } catch(err) {
+              console.log("Error fetching data-----------", err);
+          }
+      }
+
       handleInputChange(event) {
           const target = event.target;
           const value = target.type === 'checkbox' ? target.checked : target.value;
           const name = target.name;
+          console.log(target.value);
 
             const updatedControls = {
             	...this.state.formControls
-                };
+            };
             const updatedFormElement = {
-            ...updatedControls[name]
+                ...updatedControls[name]
             };
             updatedFormElement.value = value;
             updatedFormElement.touched = true;
@@ -59,16 +83,25 @@ class SchoolForm extends React.Component {
                 }
             }
 
+            console.log(updatedControls);
+
             this.setState({
                 formControls: updatedControls,
-                formIsValid: formIsValid
+                formIsValid: formIsValid,
+                optionsRegion: this.state.optionsRegion
             });
         }
+
+    formSubmitHandler = () => {
+    	const formData = {};
+    	for (let formElementId in this.state.formControls) {
+    	    formData[formElementId] = this.state.formControls[formElementId].value;
+    	}
+    }
 
 
     saveSchoolForm(e) {
         e.preventDefault();
-        console.log(this.state.formControls.schoolName.value);
     }
 
 
@@ -84,6 +117,24 @@ class SchoolForm extends React.Component {
                             </div>
                             <div className="ibox-content">
                                 <form>
+                                    <div className="form-group row"><label className="col-sm-2 col-form-label">Region</label>
+
+                                        <div className="col-sm-10">
+                                        <select className="form-control m-b"
+                                        name="selectedRegion"
+                                        value={this.state.formControls.selectedRegion.value}
+                                        onChange={this.handleInputChange}
+                                        >
+                                            {this.state.optionsRegion.map(option => (
+                                                <option value={option.code}>
+                                                  {option.name}
+                                                </option>
+                                              ))}
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div className="hr-line-dashed"></div>
+
                                     <div className={this.state.formControls.schoolName.touched && !this.state.formControls.schoolName.valid ?  "form-group row has-error" : "form-group row" }>
                                         <label className="col-sm-2 col-form-label">Nom école</label>
                                         <div className="col-sm-10">
