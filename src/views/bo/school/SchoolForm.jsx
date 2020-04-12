@@ -25,7 +25,10 @@ class SchoolForm extends React.Component {
                      }
                  },
                 zipCode: {
-                     value: ''
+                     value: '',
+                     validationRules: {
+                         minLength: 5
+                     }
                  },
                 description: {
                      value: ''
@@ -54,7 +57,7 @@ class SchoolForm extends React.Component {
                      optionsRegion: optionsRegion
                 });
           } catch(err) {
-              console.log("Error fetching data-----------", err);
+              console.log("Error fetching region list -----------", err);
           }
       }
 
@@ -62,7 +65,6 @@ class SchoolForm extends React.Component {
           const target = event.target;
           const value = target.type === 'checkbox' ? target.checked : target.value;
           const name = target.name;
-          console.log(target.value);
 
             const updatedControls = {
             	...this.state.formControls
@@ -82,8 +84,6 @@ class SchoolForm extends React.Component {
                     formIsValid = updatedControls[inputIdentifier].valid && formIsValid;
                 }
             }
-
-            console.log(updatedControls);
 
             this.setState({
                 formControls: updatedControls,
