@@ -45,19 +45,19 @@ class SchoolForm extends React.Component {
                      value: ''
                 },
                 selectedRegion: {
-                     value: '',
+                     value: '11',
                      validationRules: {
                         minLength: 1
                      }
                 },
                 selectedDepartment: {
-                     value: '',
+                     value: '75',
                      validationRules: {
                         minLength: 1
                      }
                 },
                 selectedCity: {
-                     value: '',
+                     value: '75013',
                      validationRules: {
                         minLength: 1
                      }
@@ -73,12 +73,15 @@ class SchoolForm extends React.Component {
        async fetchRegionList() {
             this.fetchRegionListService.fetchRegionList().then(json => {
                       this.setState({
-                                     optionsRegion: json
-                        });
+                             optionsRegion: json
+                      });
 
-                      console.log('selectedRegion: ' +this.state.formControls.selectedRegion.value);
-                    }
-                );
+                      if( this.state.formControls.selectedRegion.value ) {
+                        this.fetchDepartmentList(this.state.formControls.selectedRegion.value);
+                      }
+                      console.log(this.state.formControls.selectedRegion.value);
+                }
+            );
       }
 
       async fetchDepartmentList(regionCode) {
@@ -88,8 +91,14 @@ class SchoolForm extends React.Component {
             });
             this.fetchDepartmentListService.fetchDepartmentList(regionCode).then(json => {
                  this.setState({
-                                optionsDepartment: json
+                        optionsDepartment: json
                  });
+
+                 if( this.state.formControls.selectedDepartment.value ) {
+                     this.fetchCityList(this.state.formControls.selectedDepartment.value);
+                 }
+
+                 console.log(this.state.formControls.selectedDepartment.value);
                }
            );
       }
@@ -100,8 +109,10 @@ class SchoolForm extends React.Component {
               });
               this.fetchCityListService.fetchCityList(departmentCode).then(json => {
                    this.setState({
-                                  optionsCity: json
+                          optionsCity: json
                    });
+
+                   console.log(this.state.formControls.selectedCity.value);
                  }
              );
         }
@@ -145,8 +156,7 @@ class SchoolForm extends React.Component {
 
             this.setState({
                 formControls: updatedControls,
-                formIsValid: formIsValid,
-                optionsRegion: this.state.optionsRegion
+                formIsValid: formIsValid
             });
         }
 
@@ -202,7 +212,7 @@ class SchoolForm extends React.Component {
                                         <div className="col-sm-10">
                                         <select className="form-control m-b"
                                         name="selectedDepartment"
-                                        value={this.state.formControls.selectedDepartment.code}
+                                        value={this.state.formControls.selectedDepartment.value}
                                         onChange={this.handleInputChange}
                                         disabled={this.state.optionsDepartment.length == 0}
                                         >
@@ -225,13 +235,13 @@ class SchoolForm extends React.Component {
                                         <div className="col-sm-10">
                                         <select className="form-control m-b"
                                         name="selectedCity"
-                                        value={this.state.formControls.selectedCity.code}
+                                        value={this.state.formControls.selectedCity.value}
                                         onChange={this.handleInputChange}
                                         disabled={this.state.optionsCity.length == 0}
                                         >
                                             <option value="">Select City</option>
                                             {this.state.optionsCity.map(option => (
-                                                <option value={option.code}>
+                                                <option value={option.zipCode}>
                                                   {option.name} ({option.zipCode})
                                                 </option>
                                               ))}
