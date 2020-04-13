@@ -1,13 +1,24 @@
 import React from 'react';
-import validate from '../../common/validation/validate';
-
+import validate from '../../../common/validation/validate';
+import * as APIConfig from '../../../config/APIConfig';
+import FetchRegionListService from '../../../common/data/FetchRegionListService';
+import FetchDepartmentListService from '../../../common/data/FetchDepartmentListService';
+import FetchCityListService from '../../../common/data/FetchCityListService';
 class SchoolForm extends React.Component {
 
     constructor(props) {
         super(props);
+        this.fetchRegionListService = new FetchRegionListService();
+        this.fetchDepartmentListService = new FetchDepartmentListService();
+        this.fetchCityListService = new FetchCityListService();
+
         this.state = {
             formIsValid: false,
             optionsRegion: [
+            ],
+            optionsDepartment: [
+            ],
+            optionsCity: [
             ],
             formControls: {
                 schoolName:  {
@@ -38,6 +49,18 @@ class SchoolForm extends React.Component {
                      validationRules: {
                         minLength: 1
                      }
+                },
+                selectedDepartment: {
+                     value: '',
+                     validationRules: {
+                        minLength: 1
+                     }
+                },
+                selectedCity: {
+                     value: '',
+                     validationRules: {
+                        minLength: 1
+                     }
                 }
             }
         };
@@ -46,20 +69,47 @@ class SchoolForm extends React.Component {
         this.saveSchoolForm = this.saveSchoolForm.bind(this);
       }
 
-      async componentDidMount() {
-          //Have a try and catch block for catching errors.
-          try {
-              //Assign the promise unresolved first then get the data using the json method.
-              const regionApiCall = await fetch('http://localhost:7777/api/v1/region/list');
-              const optionsRegion = await regionApiCall.json();
 
-                this.setState({
-                     optionsRegion: optionsRegion
-                });
-          } catch(err) {
-              console.log("Error fetching region list -----------", err);
-          }
+       async fetchRegionList() {
+            this.fetchRegionListService.fetchRegionList().then(json => {
+                      this.setState({
+                                     optionsRegion: json
+                        });
+
+                      console.log('selectedRegion: ' +this.state.formControls.selectedRegion.value);
+                    }
+                );
       }
+
+      async fetchDepartmentList(regionCode) {
+            this.setState({
+                 optionsDepartment: [],
+                 optionsCity: []
+            });
+            this.fetchDepartmentListService.fetchDepartmentList(regionCode).then(json => {
+                 this.setState({
+                                optionsDepartment: json
+                 });
+               }
+           );
+      }
+
+      async fetchCityList(departmentCode) {
+              this.setState({
+                       optionsCity: []
+              });
+              this.fetchCityListService.fetchCityList(departmentCode).then(json => {
+                   this.setState({
+                                  optionsCity: json
+                   });
+                 }
+             );
+        }
+
+      async componentDidMount() {
+          this.fetchRegionList();
+      }
+
 
       handleInputChange(event) {
           const target = event.target;
@@ -83,6 +133,14 @@ class SchoolForm extends React.Component {
                 if(typeof updatedControls[inputIdentifier] != 'undefined') {
                     formIsValid = updatedControls[inputIdentifier].valid && formIsValid;
                 }
+            }
+
+            //console.log(name);
+            if(name == 'selectedRegion') {
+                this.fetchDepartmentList(value);
+            }
+            if(name == 'selectedDepartment') {
+                this.fetchCityList(value);
             }
 
             this.setState({
@@ -124,7 +182,9 @@ class SchoolForm extends React.Component {
                                         name="selectedRegion"
                                         value={this.state.formControls.selectedRegion.value}
                                         onChange={this.handleInputChange}
+                                        disabled={this.state.optionsRegion.length == 0}
                                         >
+                                            <option value="">Select Region</option>
                                             {this.state.optionsRegion.map(option => (
                                                 <option value={option.code}>
                                                   {option.name}
@@ -134,6 +194,54 @@ class SchoolForm extends React.Component {
                                         </div>
                                     </div>
                                     <div className="hr-line-dashed"></div>
+
+
+
+                                    <div className="form-group row"><label className="col-sm-2 col-form-label">Department</label>
+
+                                        <div className="col-sm-10">
+                                        <select className="form-control m-b"
+                                        name="selectedDepartment"
+                                        value={this.state.formControls.selectedDepartment.code}
+                                        onChange={this.handleInputChange}
+                                        disabled={this.state.optionsDepartment.length == 0}
+                                        >
+                                            <option value="">Select Department</option>
+                                            {this.state.optionsDepartment.map(option => (
+                                                <option value={option.code}>
+                                                  {option.name} ({option.code})
+                                                </option>
+                                              ))}
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div className="hr-line-dashed"></div>
+
+
+
+
+                                    <div className="form-group row"><label className="col-sm-2 col-form-label">City</label>
+
+                                        <div className="col-sm-10">
+                                        <select className="form-control m-b"
+                                        name="selectedCity"
+                                        value={this.state.formControls.selectedCity.code}
+                                        onChange={this.handleInputChange}
+                                        disabled={this.state.optionsCity.length == 0}
+                                        >
+                                            <option value="">Select City</option>
+                                            {this.state.optionsCity.map(option => (
+                                                <option value={option.code}>
+                                                  {option.name} ({option.zipCode})
+                                                </option>
+                                              ))}
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div className="hr-line-dashed"></div>
+
+
+
 
                                     <div className={this.state.formControls.schoolName.touched && !this.state.formControls.schoolName.valid ?  "form-group row has-error" : "form-group row" }>
                                         <label className="col-sm-2 col-form-label">Nom école</label>
