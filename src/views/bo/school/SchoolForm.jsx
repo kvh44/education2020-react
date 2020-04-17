@@ -4,6 +4,9 @@ import * as APIConfig from '../../../config/APIConfig';
 import FetchRegionListService from '../../../common/data/FetchRegionListService';
 import FetchDepartmentListService from '../../../common/data/FetchDepartmentListService';
 import FetchCityListService from '../../../common/data/FetchCityListService';
+
+import ListRegion from './ListRegion';
+
 class SchoolForm extends React.Component {
 
     constructor(props) {
@@ -11,6 +14,8 @@ class SchoolForm extends React.Component {
         this.fetchRegionListService = new FetchRegionListService();
         this.fetchDepartmentListService = new FetchDepartmentListService();
         this.fetchCityListService = new FetchCityListService();
+
+        this.optionsRegionRef = React.createRef();
 
         this.state = {
             formIsValid: false,
@@ -69,6 +74,10 @@ class SchoolForm extends React.Component {
         this.saveSchoolForm = this.saveSchoolForm.bind(this);
       }
 
+      componentDidMount() {
+
+      }
+
 
        async fetchRegionList() {
             this.fetchRegionListService.fetchRegionList().then(json => {
@@ -76,10 +85,12 @@ class SchoolForm extends React.Component {
                              optionsRegion: json
                       });
 
+                      this.optionsRegionRef.current.focusList();
+
                       if( this.state.formControls.selectedRegion.value ) {
                         this.fetchDepartmentList(this.state.formControls.selectedRegion.value);
                       }
-                      console.log(this.state.formControls.selectedRegion.value);
+
                 }
             );
       }
@@ -98,7 +109,7 @@ class SchoolForm extends React.Component {
                      this.fetchCityList(this.state.formControls.selectedDepartment.value);
                  }
 
-                 console.log(this.state.formControls.selectedDepartment.value);
+                 //console.log(this.state.formControls.selectedDepartment.value);
                }
            );
       }
@@ -112,7 +123,7 @@ class SchoolForm extends React.Component {
                           optionsCity: json
                    });
 
-                   console.log(this.state.formControls.selectedCity.value);
+                   //console.log(this.state.formControls.selectedCity.value);
                  }
              );
         }
@@ -148,9 +159,12 @@ class SchoolForm extends React.Component {
 
             //console.log(name);
             if(name == 'selectedRegion') {
+                updatedControls['selectedDepartment'].value = '';
+                updatedControls['selectedCity'].value = '';
                 this.fetchDepartmentList(value);
             }
             if(name == 'selectedDepartment') {
+                updatedControls['selectedCity'].value = '';
                 this.fetchCityList(value);
             }
 
@@ -185,27 +199,13 @@ class SchoolForm extends React.Component {
                             </div>
                             <div className="ibox-content">
                                 <form>
-                                    <div className="form-group row"><label className="col-sm-2 col-form-label">Region</label>
-
-                                        <div className="col-sm-10">
-                                        <select className="form-control m-b"
-                                        name="selectedRegion"
-                                        value={this.state.formControls.selectedRegion.value}
-                                        onChange={this.handleInputChange}
+                                    <ListRegion
+                                        selectedRegion={this.state.formControls.selectedRegion.value}
+                                        handleInputChange={this.handleInputChange}
                                         disabled={this.state.optionsRegion.length == 0}
-                                        >
-                                            <option value="">Select Region</option>
-                                            {this.state.optionsRegion.map(option => (
-                                                <option value={option.code}>
-                                                  {option.name}
-                                                </option>
-                                              ))}
-                                        </select>
-                                        </div>
-                                    </div>
-                                    <div className="hr-line-dashed"></div>
-
-
+                                        ref={this.optionsRegionRef}
+                                        optionsRegion={this.state.optionsRegion}
+                                       />
 
                                     <div className="form-group row"><label className="col-sm-2 col-form-label">Department</label>
 
