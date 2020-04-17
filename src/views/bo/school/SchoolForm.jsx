@@ -6,6 +6,8 @@ import FetchDepartmentListService from '../../../common/data/FetchDepartmentList
 import FetchCityListService from '../../../common/data/FetchCityListService';
 
 import ListRegion from './ListRegion';
+import ListDepartment from './ListDepartment';
+import ListCity from './ListCity';
 
 class SchoolForm extends React.Component {
 
@@ -16,6 +18,8 @@ class SchoolForm extends React.Component {
         this.fetchCityListService = new FetchCityListService();
 
         this.optionsRegionRef = React.createRef();
+        this.optionsDepartmentRef = React.createRef();
+        this.optionsCityRef = React.createRef();
 
         this.state = {
             formIsValid: false,
@@ -207,48 +211,23 @@ class SchoolForm extends React.Component {
                                         optionsRegion={this.state.optionsRegion}
                                        />
 
-                                    <div className="form-group row"><label className="col-sm-2 col-form-label">Department</label>
-
-                                        <div className="col-sm-10">
-                                        <select className="form-control m-b"
-                                        name="selectedDepartment"
-                                        value={this.state.formControls.selectedDepartment.value}
-                                        onChange={this.handleInputChange}
+                                    <ListDepartment
+                                        selectedDepartment={this.state.formControls.selectedDepartment.value}
+                                        handleInputChange={this.handleInputChange}
                                         disabled={this.state.optionsDepartment.length == 0}
-                                        >
-                                            <option value="">Select Department</option>
-                                            {this.state.optionsDepartment.map(option => (
-                                                <option value={option.code}>
-                                                  {option.name} ({option.code})
-                                                </option>
-                                              ))}
-                                        </select>
-                                        </div>
-                                    </div>
-                                    <div className="hr-line-dashed"></div>
+                                        ref={this.optionsDepartmentRef}
+                                        optionsDepartment={this.state.optionsDepartment}
+                                       />
 
 
 
-
-                                    <div className="form-group row"><label className="col-sm-2 col-form-label">City</label>
-
-                                        <div className="col-sm-10">
-                                        <select className="form-control m-b"
-                                        name="selectedCity"
-                                        value={this.state.formControls.selectedCity.value}
-                                        onChange={this.handleInputChange}
+                                    <ListCity
+                                        selectedCity={this.state.formControls.selectedCity.value}
+                                        handleInputChange={this.handleInputChange}
                                         disabled={this.state.optionsCity.length == 0}
-                                        >
-                                            <option value="">Select City</option>
-                                            {this.state.optionsCity.map(option => (
-                                                <option value={option.zipCode}>
-                                                  {option.name} ({option.zipCode})
-                                                </option>
-                                              ))}
-                                        </select>
-                                        </div>
-                                    </div>
-                                    <div className="hr-line-dashed"></div>
+                                        ref={this.optionsCityRef}
+                                        optionsCity={this.state.optionsCity}
+                                       />
 
 
 
