@@ -26,9 +26,9 @@ class ListDepartment extends React.Component {
                     disabled={this.props.disabled}
                     ref={this.optionsDepartmentRef}
                     >
-                        <option value="">Select Department</option>
-                        {this.props.optionsDepartment.map(option => (
-                            <option value={option.code}>
+                        <option key="department" value="">Select Department</option>
+                        {this.props.optionsDepartment.map((option , index) => (
+                            <option key={index} value={option.code}>
                               {option.name}
                             </option>
                           ))}

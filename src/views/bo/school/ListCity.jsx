@@ -28,9 +28,9 @@ class ListCity extends React.Component {
                     disabled={this.props.disabled}
                     ref={this.optionsCityRef}
                     >
-                        <option value="">Select City</option>
-                        {this.props.optionsCity.map(option => (
-                            <option value={option.zipCode}>
+                        <option key="city" value="">Select City</option>
+                        {this.props.optionsCity.map( (option , index) => (
+                            <option key={index} value={option.zipCode}>
                               {option.name} ({option.zipCode})
                             </option>
                           ))}
