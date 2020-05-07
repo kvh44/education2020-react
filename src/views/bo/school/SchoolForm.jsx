@@ -9,6 +9,10 @@ import ListRegion from './ListRegion';
 import ListDepartment from './ListDepartment';
 import ListCity from './ListCity';
 
+import 'icheck/skins/all.css';
+import {Checkbox, Radio, RadioGroup} from 'react-icheck';
+
+
 class SchoolForm extends React.Component {
 
     constructor(props) {
@@ -22,7 +26,7 @@ class SchoolForm extends React.Component {
         this.optionsCityRef = React.createRef();
 
         this.state = {
-            formIsValid: false,
+            formIsValid: true,
             optionsRegion: [
             ],
             optionsDepartment: [
@@ -32,8 +36,8 @@ class SchoolForm extends React.Component {
             formControls: {
                 schoolName:  {
                     value: '',
-                    valid: false,
-                    touched: false,
+                    //valid: false,
+                    //touched: false,
                     validationRules: {
                        minLength: 3
                     }
@@ -51,35 +55,37 @@ class SchoolForm extends React.Component {
                      }
                  },
                 description: {
-                     value: ''
+                     value: '',
+                       validationRules: {
+                          minLength: 1
+                       }
                 },
                 selectedRegion: {
-                     value: '11',
+                     value: '',
                      validationRules: {
                         minLength: 1
                      }
                 },
                 selectedDepartment: {
-                     value: '75',
+                     value: '',
                      validationRules: {
                         minLength: 1
                      }
                 },
                 selectedCity: {
-                     value: '75013',
+                     value: '',
                      validationRules: {
                         minLength: 1
                      }
+                },
+                isprivate: {
+                      value: false
                 }
             }
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.saveSchoolForm = this.saveSchoolForm.bind(this);
-      }
-
-      componentDidMount() {
-
       }
 
 
@@ -150,16 +156,21 @@ class SchoolForm extends React.Component {
             };
             updatedFormElement.value = value;
             updatedFormElement.touched = true;
-            updatedFormElement.valid = validate(value, updatedFormElement.validationRules);
+            //updatedFormElement.valid = validate(value, updatedFormElement.validationRules);
 
             updatedControls[name] = updatedFormElement;
 
+
             let formIsValid = true;
+            /*
             for (let inputIdentifier in updatedControls) {
                 if(typeof updatedControls[inputIdentifier] != 'undefined') {
                     formIsValid = updatedControls[inputIdentifier].valid && formIsValid;
                 }
             }
+
+            console.log(formIsValid);
+            */
 
             //console.log(name);
             if(name == 'selectedRegion') {
@@ -178,16 +189,14 @@ class SchoolForm extends React.Component {
             });
         }
 
-    formSubmitHandler = () => {
+    saveSchoolForm = (e) => {
+        e.preventDefault();
+
     	const formData = {};
     	for (let formElementId in this.state.formControls) {
     	    formData[formElementId] = this.state.formControls[formElementId].value;
     	}
-    }
-
-
-    saveSchoolForm(e) {
-        e.preventDefault();
+    	console.log(formData);
     }
 
 
@@ -231,6 +240,22 @@ class SchoolForm extends React.Component {
 
 
 
+                                    <div className="form-group row"><label className="col-sm-2 col-form-label">Age</label>
+                                        <div className="col-sm-10">
+                                        <select className="form-control m-b"
+                                        name="selectedAge"
+                                        value={this.props.selectedAge}
+                                        onChange={this.props.handleInputChange}
+                                        disabled={this.props.disabled}
+                                        >
+                                            <option key="age" value="1">Ecole primaire</option>
+
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div className="hr-line-dashed"></div>
+
+
 
                                     <div className={this.state.formControls.schoolName.touched && !this.state.formControls.schoolName.valid ?  "form-group row has-error" : "form-group row" }>
                                         <label className="col-sm-2 col-form-label">Nom école</label>
@@ -254,6 +279,31 @@ class SchoolForm extends React.Component {
                                         <div className="col-sm-10"><input type="text" className="form-control" name="zipCode"
                                          value={this.state.formControls.zipCode.value}
                                          onChange={this.handleInputChange} /></div>
+                                    </div>
+                                    <div className="hr-line-dashed"></div>
+
+                                    <div className="form-group row"><label className="col-sm-2 col-form-label">Ecole Privé</label>
+                                        <div className="col-sm-10">
+
+                                                <RadioGroup name="isprivate"
+                                                onChange={this.handleInputChange}
+                                                value={this.state.formControls.isprivate.value}>
+                                                    <Radio
+                                                      radioClass="iradio_square-green"
+                                                      increaseArea="20%"
+                                                      label="Yes"
+                                                      value="true"
+                                                    />
+                                                    <Radio
+                                                      radioClass="iradio_square-green"
+                                                      increaseArea="20%"
+                                                      label="No"
+                                                      value="false"
+                                                    />
+                                                </RadioGroup>
+
+
+                                        </div>
                                     </div>
                                     <div className="hr-line-dashed"></div>
 
