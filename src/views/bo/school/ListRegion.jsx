@@ -26,9 +26,9 @@ class ListRegion extends React.Component {
                     disabled={this.props.disabled}
                     ref={this.optionsRegionRef}
                     >
-                        <option value="">Select Region</option>
-                        {this.props.optionsRegion.map(option => (
-                            <option value={option.code}>
+                        <option key="region" value="">Select Region</option>
+                        {this.props.optionsRegion.map((option , index) => (
+                            <option key={index} value={option.code}>
                               {option.name}
                             </option>
                           ))}
